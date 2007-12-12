@@ -9,7 +9,8 @@ all_from 'lib/Linux/Input/Wiimote.pm';
 
 test_requires 'Test::More';
 
-makemaker_args LIBS => '-lcwiimote -lbluetooth',
+makemaker_args
+    LIBS   => '-lcwiimote -lbluetooth',
     DEFINE => '-D_ENABLE_TILT -D_ENABLE_FORCE';
 
 auto_install;

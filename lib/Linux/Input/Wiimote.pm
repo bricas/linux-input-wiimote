@@ -1,254 +1,246 @@
-        package Linux::Input::Wiimote;
+package Linux::Input::Wiimote;
 
-        use strict;
-        use warnings;
+use strict;
+use warnings;
 
-        require Exporter;
-        require DynaLoader;
+use base qw(DynaLoader);
 
-        our @ISA = qw(Exporter DynaLoader);
+our $VERSION = '0.0400';
 
-        # Items to export into callers namespace by default. Note: do not export
-        # names by default without a very good reason. Use EXPORT_OK instead.
-        # Do not simply export all your public functions/methods/constants.
-        our @EXPORT = qw( );
-        our $VERSION = '0.03';
+bootstrap Linux::Input::Wiimote;
 
-        bootstrap Linux::Input::Wiimote ;
+use constant {
+    WIIMOTE_KEYS_OFFSET_HOME      => 0,
+    WIIMOTE_KEYS_OFFSET_RESERVED1 => 1,
+    WIIMOTE_KEYS_OFFSET_RESERVED2 => 2,
+    WIIMOTE_KEYS_OFFSET_MINUS     => 3,
+    WIIMOTE_KEYS_OFFSET_A         => 4,
+    WIIMOTE_KEYS_OFFSET_B         => 5,
+    WIIMOTE_KEYS_OFFSET_1         => 6,
+    WIIMOTE_KEYS_OFFSET_2         => 7,
+    WIIMOTE_KEYS_OFFSET_RESERVED3 => 8,
+    WIIMOTE_KEYS_OFFSET_RESERVED4 => 9,
+    WIIMOTE_KEYS_OFFSET_RESERVED5 => 10,
+    WIIMOTE_KEYS_OFFSET_PLUS      => 11,
+    WIIMOTE_KEYS_OFFSET_UP        => 12,
+    WIIMOTE_KEYS_OFFSET_DOWN      => 13,
+    WIIMOTE_KEYS_OFFSET_RIGHT     => 14,
+    WIIMOTE_KEYS_OFFSET_LEFT      => 15,
+};
 
-        use constant {
-            WIIMOTE_KEYS_OFFSET_HOME      => 0,
-            WIIMOTE_KEYS_OFFSET_RESERVED1 => 1,
-            WIIMOTE_KEYS_OFFSET_RESERVED2 => 2,
-            WIIMOTE_KEYS_OFFSET_MINUS     => 3,
-            WIIMOTE_KEYS_OFFSET_A         => 4,
-            WIIMOTE_KEYS_OFFSET_B         => 5,
-            WIIMOTE_KEYS_OFFSET_1         => 6,
-            WIIMOTE_KEYS_OFFSET_2         => 7,
-            WIIMOTE_KEYS_OFFSET_RESERVED3 => 8,
-            WIIMOTE_KEYS_OFFSET_RESERVED4 => 9,
-            WIIMOTE_KEYS_OFFSET_RESERVED5 => 10,
-            WIIMOTE_KEYS_OFFSET_PLUS      => 11,
-            WIIMOTE_KEYS_OFFSET_UP        => 12,
-            WIIMOTE_KEYS_OFFSET_DOWN      => 13,
-            WIIMOTE_KEYS_OFFSET_RIGHT     => 14,
-            WIIMOTE_KEYS_OFFSET_LEFT      => 15,
-        };
+sub wiimote_discover {
+    my $self = shift;
+    return c_wiimote_discover();
+}
 
-        sub wiimote_discover {
-            my $self = shift;
-            return c_wiimote_discover();
-        }
+sub wiimote_connect {
+    my $self = shift;
+    my $id   = shift;
+    c_wiimote_connect( $id );
+}
 
-        sub wiimote_connect {
-            my $self = shift;
-            my $id   = shift;
-            c_wiimote_connect($id);
-        }
+sub wiimote_is_open {
+    my $self = shift;
+    return c_wiimote_is_open();
+}
 
-        sub wiimote_is_open {
-            my $self = shift;
-            return c_wiimote_is_open();
-        }
+sub wiimote_update {
+    my $self = shift;
+    c_wiimote_update();
+}
 
-        sub wiimote_update {
-            my $self = shift;
-            c_wiimote_update();
-        }
+sub wiimote_disconnect {
+    my $self = shift;
+    c_wiimote_disconnect();
+}
 
-        sub wiimote_disconnect {
-            my $self = shift;
-            c_wiimote_disconnect();
-        }
+sub get_wiimote_rumble {
+    my $self = shift;
+    return c_get_wiimote_rumble();
+}
 
-        sub get_wiimote_rumble {
-            my $self = shift;
-            return c_get_wiimote_rumble();
-        }
+sub set_wiimote_rumble {
+    my $self = shift;
+    my $setr = shift;
+    c_set_wiimote_rumble( $setr );
+}
 
-        sub set_wiimote_rumble {
-            my $self = shift;
-            my $setr = shift;
-            c_set_wiimote_rumble( $setr );
-        }
+sub get_wiimote_ir {
+    my $self = shift;
+    return c_get_wiimote_ir();
+}
 
-        sub get_wiimote_ir {
-            my $self = shift;
-            return c_get_wiimote_ir();
-        }
+sub set_wiimote_ir {
+    my $self = shift;
+    my $setr = shift;
+    c_set_wiimote_ir( $setr );
+}
 
-        sub set_wiimote_ir {
-            my $self = shift;
-            my $setr = shift;
-            c_set_wiimote_ir( $setr );
-        }
+sub get_wiimote_ext_nunchuk_joyx {
+    my $self = shift;
+    return c_get_wiimote_ext_nunchuk_joyx();
+}
 
-        sub get_wiimote_ext_nunchuk_joyx {
-            my $self = shift;
-            return c_get_wiimote_ext_nunchuk_joyx();
-        }
+sub get_wiimote_ext_nunchuk_joyy {
+    my $self = shift;
+    return c_get_wiimote_ext_nunchuk_joyy();
+}
 
-        sub get_wiimote_ext_nunchuk_joyy {
-            my $self = shift;
-            return c_get_wiimote_ext_nunchuk_joyy();
-        }
+sub get_wiimote_ext_nunchuk_keys_c {
+    my $self = shift;
+    return c_get_wiimote_ext_nunchuk_keys_c();
+}
 
-        sub get_wiimote_ext_nunchuk_keys_c {
-            my $self = shift;
-            return c_get_wiimote_ext_nunchuk_keys_c();
-        }
+sub get_wiimote_ext_nunchuk_keys_z {
+    my $self = shift;
+    return c_get_wiimote_ext_nunchuk_keys_z();
+}
 
-        sub get_wiimote_ext_nunchuk_keys_z {
-            my $self = shift;
-            return c_get_wiimote_ext_nunchuk_keys_z();
-        }
+sub get_wiimote_ext_nunchuk_axis_x {
+    my $self = shift;
+    return c_get_wiimote_ext_nunchuk_axis_x();
+}
 
-        sub get_wiimote_ext_nunchuk_axis_x {
-            my $self = shift;
-            return c_get_wiimote_ext_nunchuk_axis_x();
-        }
+sub get_wiimote_ext_nunchuk_axis_y {
+    my $self = shift;
+    return c_get_wiimote_ext_nunchuk_axis_y();
+}
 
-        sub get_wiimote_ext_nunchuk_axis_y {
-            my $self = shift;
-            return c_get_wiimote_ext_nunchuk_axis_y();
-        }
+sub get_wiimote_ext_nunchuk_axis_z {
+    my $self = shift;
+    return c_get_wiimote_ext_nunchuk_axis_z();
+}
 
-        sub get_wiimote_ext_nunchuk_axis_z {
-            my $self = shift;
-            return c_get_wiimote_ext_nunchuk_axis_z();
-        }
+sub get_wiimote_axis_x {
+    my $self = shift;
+    return c_get_wiimote_axis_x();
+}
 
-        sub get_wiimote_axis_x {
-            my $self = shift;
-            return c_get_wiimote_axis_x();
-        }
+sub get_wiimote_axis_y {
+    my $self = shift;
+    return c_get_wiimote_axis_y();
+}
 
-        sub get_wiimote_axis_y {
-            my $self = shift;
-            return c_get_wiimote_axis_y();
-        }
+sub get_wiimote_axis_z {
+    my $self = shift;
+    return c_get_wiimote_axis_z();
+}
 
-        sub get_wiimote_axis_z {
-            my $self = shift;
-            return c_get_wiimote_axis_z();
-        }
+sub get_wiimote_tilt_x {
+    my $self = shift;
+    return c_get_wiimote_tilt_x();
+}
 
-        sub get_wiimote_tilt_x {
-            my $self = shift;
-            return c_get_wiimote_tilt_x();
-        }
+sub get_wiimote_tilt_y {
+    my $self = shift;
+    return c_get_wiimote_tilt_y();
+}
 
-        sub get_wiimote_tilt_y {
-            my $self = shift;
-            return c_get_wiimote_tilt_y();
-        }
+sub get_wiimote_tilt_z {
+    my $self = shift;
+    return c_get_wiimote_tilt_z();
+}
 
-        sub get_wiimote_tilt_z {
-            my $self = shift;
-            return c_get_wiimote_tilt_z();
-        }
+sub get_wiimote_force_x {
+    my $self = shift;
+    return c_get_wiimote_force_x();
+}
 
-        sub get_wiimote_force_x {
-            my $self = shift;
-            return c_get_wiimote_force_x();
-        }
+sub get_wiimote_force_y {
+    my $self = shift;
+    return c_get_wiimote_force_y();
+}
 
-        sub get_wiimote_force_y {
-            my $self = shift;
-            return c_get_wiimote_force_y();
-        }
+sub get_wiimote_force_z {
+    my $self = shift;
+    return c_get_wiimote_force_z();
+}
 
-        sub get_wiimote_force_z {
-            my $self = shift;
-            return c_get_wiimote_force_z();
-        }
+sub activate_wiimote_accelerometer {
+    my $self = shift;
+    c_activate_wiimote_accelerometer();
+}
 
-        sub activate_wiimote_accelerometer {
-            my $self = shift;
-            c_activate_wiimote_accelerometer();
-        }
+sub deactivate_wiimote_accelerometer {
+    my $self = shift;
+    c_deactivate_wiimote_accelerometer();
+}
 
-        sub deactivate_wiimote_accelerometer {
-            my $self = shift;
-            c_deactivate_wiimote_accelerometer();
-        }
+sub get_wiimote_keys_home {
+    my $self = shift;
+    return _get_wiimote_offset_bit( WIIMOTE_KEYS_OFFSET_HOME );
+}
 
-        sub get_wiimote_keys_home {
-            my $self = shift;
-            return _get_wiimote_offset_bit(WIIMOTE_KEYS_OFFSET_HOME);
-        }
+sub get_wiimote_keys_minus {
+    my $self = shift;
+    return _get_wiimote_offset_bit( WIIMOTE_KEYS_OFFSET_MINUS );
+}
 
-        sub get_wiimote_keys_minus {
-            my $self = shift;
-            return _get_wiimote_offset_bit(WIIMOTE_KEYS_OFFSET_MINUS);
-        }
+sub get_wiimote_keys_a {
+    my $self = shift;
+    return _get_wiimote_offset_bit( WIIMOTE_KEYS_OFFSET_A );
+}
 
-        sub get_wiimote_keys_a {
-            my $self = shift;
-            return _get_wiimote_offset_bit(WIIMOTE_KEYS_OFFSET_A);
-        }
+sub get_wiimote_keys_b {
+    my $self = shift;
+    return _get_wiimote_offset_bit( WIIMOTE_KEYS_OFFSET_B );
+}
 
-        sub get_wiimote_keys_b {
-            my $self = shift;
-            return _get_wiimote_offset_bit(WIIMOTE_KEYS_OFFSET_B);
-        }
+sub get_wiimote_keys_1 {
+    my $self = shift;
+    return _get_wiimote_offset_bit( WIIMOTE_KEYS_OFFSET_1 );
+}
 
-        sub get_wiimote_keys_1 {
-            my $self = shift;
-            return _get_wiimote_offset_bit(WIIMOTE_KEYS_OFFSET_1);
-        }
+sub get_wiimote_keys_2 {
+    my $self = shift;
+    return _get_wiimote_offset_bit( WIIMOTE_KEYS_OFFSET_2 );
+}
 
-        sub get_wiimote_keys_2 {
-            my $self = shift;
-            return _get_wiimote_offset_bit(WIIMOTE_KEYS_OFFSET_2);
-        }
+sub get_wiimote_keys_plus {
+    my $self = shift;
+    return _get_wiimote_offset_bit( WIIMOTE_KEYS_OFFSET_PLUS );
+}
 
-        sub get_wiimote_keys_plus {
-            my $self = shift;
-            return _get_wiimote_offset_bit(WIIMOTE_KEYS_OFFSET_PLUS);
-        }
+sub get_wiimote_keys_up {
+    my $self = shift;
+    return _get_wiimote_offset_bit( WIIMOTE_KEYS_OFFSET_UP );
+}
 
-        sub get_wiimote_keys_up {
-            my $self = shift;
-            return _get_wiimote_offset_bit(WIIMOTE_KEYS_OFFSET_UP);
-        }
+sub get_wiimote_keys_down {
+    my $self = shift;
+    return _get_wiimote_offset_bit( WIIMOTE_KEYS_OFFSET_DOWN );
+}
 
-        sub get_wiimote_keys_down {
-            my $self = shift;
-            return _get_wiimote_offset_bit(WIIMOTE_KEYS_OFFSET_DOWN);
-        }
+sub get_wiimote_keys_right {
+    my $self = shift;
+    return _get_wiimote_offset_bit( WIIMOTE_KEYS_OFFSET_RIGHT );
+}
 
-        sub get_wiimote_keys_right {
-            my $self = shift;
-            return _get_wiimote_offset_bit(WIIMOTE_KEYS_OFFSET_RIGHT);
-        }
+sub get_wiimote_keys_left {
+    my $self = shift;
+    return _get_wiimote_offset_bit( WIIMOTE_KEYS_OFFSET_LEFT );
+}
 
-        sub get_wiimote_keys_left {
-            my $self = shift;
-            return _get_wiimote_offset_bit(WIIMOTE_KEYS_OFFSET_LEFT);
-        }
+sub get_wiimote_keys_bits {
+    my $self = shift;
+    return dec2bin16( c_get_wiimote_keys_raw_bits() );
+}
 
-        sub get_wiimote_keys_bits {
-            my $self = shift;
-            return dec2bin16(c_get_wiimote_keys_raw_bits() );
-        }
+sub _get_wiimote_offset_bit {
+    my $offset = shift;
+    return substr( dec2bin16( c_get_wiimote_keys_raw_bits() ), $offset, 1 );
+}
 
-        sub _get_wiimote_offset_bit {
-            my $offset = shift;
-            return substr( dec2bin16( c_get_wiimote_keys_raw_bits() ), $offset, 1 );
-        }
+sub dec2bin16 {
+    my $str = unpack( "B32", pack( "N", shift ) );
+    return substr( $str, 16, 16 );
+}
 
-        sub dec2bin16 {
-            my $str = unpack( "B32", pack( "N", shift ) );
-            return substr( $str, 16, 16 );
-        }
-
-        sub new {
-            my $self = {};
-            bless($self);    # but see below
-            return $self;
-        }
-
+sub new {
+    my $self = {};
+    bless( $self );    # but see below
+    return $self;
+}
 
 =head1 NAME
 
