@@ -5,7 +5,7 @@ use warnings;
 
 use base qw(DynaLoader);
 
-our $VERSION = '0.0400';
+our $VERSION = '0.04000';
 
 bootstrap Linux::Input::Wiimote;
 
@@ -244,119 +244,122 @@ sub new {
 
 =head1 NAME
 
- Wiimote
+Linux::Input::Wiimote - Perl interface to the libcwiimote library
 
 =head1 SYNOPSIS
 
- This is a perl interface to the C library libcwiimote ( http://sourceforge.net/projects/libwiimote/ ).
- It implements most of that API and provides access to most functions of the wiimote.
+    This is a perl interface to the C library libcwiimote ( http://sourceforge.net/projects/libwiimote/ ).
+    It implements most of that API and provides access to most functions of the wiimote.
 
- libcwiimote version .03 must be installed and the bluetooth dameon must be running
+    libcwiimote version 0.04 must be installed and the bluetooth dameon must be running
 
- Auto discovery is not yet built in.  You must know the id of your wiimote.  You can use hcitool scan
- to find the id.
+    Auto discovery is not yet built in.  You must know the id of your wiimote.  You can use hcitool scan
+    to find the id.
 
- Methods:
+    Methods:
 
- wiimote_connect( ID OF YOUR WIIMOTE ): pass in the id of your wiimote such as '00:19:1D:75:CC:30'.  Returns 0 on success
- wiimote_update : updates the wiimote.  Should be called often
+    wiimote_connect( ID OF YOUR WIIMOTE ): pass in the id of your wiimote such as '00:19:1D:75:CC:30'.  Returns 0 on success
+    wiimote_update : updates the wiimote.  Should be called often
 
- wiimote_discover: discovers and returns the id of the last wiimote it sees.  WARNING, this method has bugs and will segfault if it doesn't find a wii quickly
- set_wiimote_rumble:  starts/stops rumble.  Pass in 1 to start, 0 to stop
- set_wiimote_ir:  starts/stops ir sensor.  Pass in 1 to start, 0 to stop
+    wiimote_discover: discovers and returns the id of the last wiimote it sees.  WARNING, this method has bugs and will segfault if it doesn't find a wii quickly
+    set_wiimote_rumble:  starts/stops rumble.  Pass in 1 to start, 0 to stop
+    set_wiimote_ir:  starts/stops ir sensor.  Pass in 1 to start, 0 to stop
 
- get_wiimote_tilt_x
- get_wiimote_tilt_y
- get_wiimote_tilt_z
+    get_wiimote_tilt_x
+    get_wiimote_tilt_y
+    get_wiimote_tilt_z
 
- get_wiimote_axis_x
- get_wiimote_axis_y
- get_wiimote_axis_z
+    get_wiimote_axis_x
+    get_wiimote_axis_y
+    get_wiimote_axis_z
 
- get_wiimote_ext_nunchuk_axis_x
- get_wiimote_ext_nunchuk_axis_y
- get_wiimote_ext_nunchuk_axis_z
+    get_wiimote_ext_nunchuk_axis_x
+    get_wiimote_ext_nunchuk_axis_y
+    get_wiimote_ext_nunchuk_axis_z
 
- get_wiimote_ext_nunchuk_joyx
- get_wiimote_ext_nunchuk_joyy
+    get_wiimote_ext_nunchuk_joyx
+    get_wiimote_ext_nunchuk_joyy
 
- IR sensor position (must first set_wiimote_ir(1) to start ir sensor) NOT YET FINISHED:
- get_wiimote_ir1_y
- get_wiimote_ir1_x
- get_wiimote_ir1_size
+    IR sensor position (must first set_wiimote_ir(1) to start ir sensor) NOT YET FINISHED:
+    get_wiimote_ir1_y
+    get_wiimote_ir1_x
+    get_wiimote_ir1_size
 
- get_wiimote_ir2_y
- get_wiimote_ir2_x
- get_wiimote_ir2_size
+    get_wiimote_ir2_y
+    get_wiimote_ir2_x
+    get_wiimote_ir2_size
 
- get_wiimote_ir3_y
- get_wiimote_ir3_x
- get_wiimote_ir3_size
+    get_wiimote_ir3_y
+    get_wiimote_ir3_x
+    get_wiimote_ir3_size
 
- get_wiimote_ir4_y
- get_wiimote_ir4_x
- get_wiimote_ir4_size
+    get_wiimote_ir4_y
+    get_wiimote_ir4_x
+    get_wiimote_ir4_size
 
- Methods below return 0 or 1 depending on if key is pressed:
+    Methods below return 0 or 1 depending on if key is pressed:
 
- get_wiimote_keys_home
- get_wiimote_keys_minus
- get_wiimote_keys_a
- get_wiimote_keys_b
- get_wiimote_keys_1
- get_wiimote_keys_2
- get_wiimote_keys_plus
- get_wiimote_keys_up
- get_wiimote_keys_down
- get_wiimote_keys_right
- get_wiimote_keys_left
- get_wiimote_keys_bits
+    get_wiimote_keys_home
+    get_wiimote_keys_minus
+    get_wiimote_keys_a
+    get_wiimote_keys_b
+    get_wiimote_keys_1
+    get_wiimote_keys_2
+    get_wiimote_keys_plus
+    get_wiimote_keys_up
+    get_wiimote_keys_down
+    get_wiimote_keys_right
+    get_wiimote_keys_left
+    get_wiimote_keys_bits
 
-=head1 Example 
+=head1 EXAMPLE
 
- use Linux::Input::Wiimote;
+    use Linux::Input::Wiimote;
 
- my $wii = new Linux::Input::Wiimote;
+    my $wii = new Linux::Input::Wiimote;
 
- $wii->wiimote_connect('00:19:1D:75:CC:30');
+    $wii->wiimote_connect('00:19:1D:75:CC:30');
 
- while ( $wii->is_open() ) {
-    $wii->wiimote_update();
-    print "Wiimote Key bits: " . $wii->get_wiimote_keys_bits() . "\n";
- }
+    while ( $wii->is_open() ) {
+        $wii->wiimote_update();
+        print "Wiimote Key bits: " . $wii->get_wiimote_keys_bits() . "\n";
+    }
 
-=head1 Todo
- 
-  Add support for multiple remotes (it is already in libcmote)
-  Add auto descovery of wiimote 
-  Add make test
+=head1 TODO
 
+=over 4
 
-=head1 Bugs 
+=item * Add support for multiple remotes (it is already in libcmote)
 
-  wiimote_discover can cause a segfault
+=item * Add auto descovery of wiimote 
 
-  
-=head1 Author
+=back
 
-   Chad Phillips chad@chadphillips.org http://www.windmeadow.com
+=head1 KNOWN BUGS
 
-=head1 License
- 
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
- 
+=over 4
+
+=item * wiimote_discover can cause a segfault
+
+=back
+
+=head1 AUTHOR
+
+Chad Phillips E<lt>chad@chadphillips.orgE<gt>
+
+=head1 MAINTAINER
+
+Brian Cassidy E<lt>bricas@cpan.org<gt>
+
+=head1 COPYRIGHT AND LICENSE
+
+Copyright 2007 by Chad Phillips
+
+Copyright 2007 by Brian Cassidy
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself. 
+
 =cut
 
 1;

@@ -3,19 +3,24 @@ use ExtUtils::testlib;
 use Linux::Input::Wiimote;
 
 print qq!
-         test.pl - libcwiimote perl module test application
+    test.pl - libcwiimote perl module test application
 
-         A    - hold to Enable accelerometer
-         1    - hold to Enable rumble
-         Home - Exit
+    USAGE: perl $0 \$addr
 
-        Press buttons 1 and 2 on the wiimote now to connect.
+    A    - hold to Enable accelerometer
+    1    - hold to Enable rumble
+    Home - Exit
+
+    Press buttons 1 and 2 on the wiimote now to connect.
+
 !;
 
 my $wii = new Linux::Input::Wiimote;
+my $addr = shift;
 
-#print "Connect " . $wii->wiimote_connect('00:19:1D:75:CC:30');
-print "Connect " . $wii->wiimote_connect( '00:19:1D:4E:87:B4' );
+die 'No address provided!' unless $addr;
+
+print "Connect " . $wii->wiimote_connect( $addr );
 print "\n-------------------------------\n";
 
 while ( $wii->wiimote_is_open() ) {
