@@ -11,19 +11,21 @@ wiimote_t wiimote = WIIMOTE_INIT;
 
 MODULE = Linux::Input::Wiimote         PACKAGE = Linux::Input::Wiimote
 
+PROTOTYPES: DISABLE
+
 char * c_wiimote_discover()
      CODE:
           wiimote_t wiimote[4];
           int nmotes = 0;
           int i = 0;
           nmotes = wiimote_discover(wiimote, 4);
-          RETVAL = '  ';
+          RETVAL = " ";
           if ( nmotes > 0 ) {
              for (i=0; i<nmotes; i++) {
                 RETVAL =  wiimote[i].link.r_addr;
              }
           } else {
-             RETVAL = '0';
+             RETVAL = "0";
           }
 
      OUTPUT:
