@@ -256,7 +256,7 @@ Linux::Input::Wiimote - Perl interface to the libcwiimote library
     Auto discovery is not yet built in.  You must know the id of your wiimote.  You can use hcitool scan
     to find the id.
 
-    Methods:
+=head1 METHODS
 
     wiimote_connect( ID OF YOUR WIIMOTE ): pass in the id of your wiimote such as '00:19:1D:75:CC:30'.  Returns 0 on success
     wiimote_update : updates the wiimote.  Should be called often
