@@ -10,10 +10,10 @@ if ( -e 'MANIFEST.SKIP' ) {
     include 'Devel::AssertOS::Linux';
 }
 
-my @libvars = ExtUtils::Liblist->ext( '-llibcwiimote -lbluetooth', 0, 1 );
+my @libvars = ExtUtils::Liblist->ext( '-lcwiimote -lbluetooth', 0, 1 );
 
 if( @{ $libvars[ 4 ] } != 2 ) {
-    die 'libcwiimote or bluetooth not installed; aborting.';
+    die 'libcwiimote or libbluetooth not installed; aborting.';
 }
 
 name 'Linux-Input-Wiimote';
