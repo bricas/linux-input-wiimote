@@ -10,12 +10,10 @@ if ( -e 'MANIFEST.SKIP' ) {
     include 'Devel::AssertOS::Linux';
 }
 
-my @libvars = ExtUtils::Liblist->ext( '-llibcwiimote', 0, 0 );
+my @libvars = ExtUtils::Liblist->ext( '-llibcwiimote -lbluetooth', 0, 1 );
 
-# This is sub-optimal. We have the source under the src/ directory,
-# we should be able to use it.
-if( !$libvars[ 2 ] ) {
-    die 'libcwiimote not installed; aborting.';
+if( @{ $libvars[ 4 ] } != 2 ) {
+    die 'libcwiimote or bluetooth not installed; aborting.';
 }
 
 name 'Linux-Input-Wiimote';
@@ -25,7 +23,7 @@ test_requires 'Test::More';
 
 makemaker_args
     INC    => '-Isrc/libwiimote-0.4/src',
-    LIBS   => '-lcwiimote -lbluetooth',
+    LIBS   => $libvars[ 2 ],
     DEFINE => '-D_ENABLE_TILT -D_ENABLE_FORCE';
 
 auto_install;
