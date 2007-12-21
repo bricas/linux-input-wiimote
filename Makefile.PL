@@ -1,6 +1,7 @@
 use inc::Module::Install 0.68;
 use Devel::AssertOS 'Linux';
 use Devel::CheckLib;
+use Config;
 
 if ( -e 'MANIFEST.SKIP' ) {
     system( 'pod2text lib/Linux/Input/Wiimote.pm > README' );
@@ -12,7 +13,8 @@ if ( -e 'MANIFEST.SKIP' ) {
 }
 
 my @libs = ( 'cwiimote', 'bluetooth' );
-check_lib_or_exit( lib => \@libs ); 
+my $libpath = [ grep { -d } split( / /, $Config{'libpth'} ) ];
+check_lib_or_exit( lib => \@libs, libpath => $libpath ); 
 
 name 'Linux-Input-Wiimote';
 all_from 'lib/Linux/Input/Wiimote.pm';
