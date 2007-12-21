@@ -1,20 +1,18 @@
 use inc::Module::Install 0.68;
-use ExtUtils::Liblist;
 use Devel::AssertOS 'Linux';
+use Devel::CheckLib;
 
 if ( -e 'MANIFEST.SKIP' ) {
     system( 'pod2text lib/Linux/Input/Wiimote.pm > README' );
 
+    include 'Devel::CheckLib';
     include 'Devel::CheckOS';
     include 'Devel::AssertOS';
     include 'Devel::AssertOS::Linux';
 }
 
-my @libvars = ExtUtils::Liblist->ext( '-lcwiimote -lbluetooth', 0, 1 );
-
-if( @{ $libvars[ 4 ] } != 2 ) {
-    die 'libcwiimote or libbluetooth not installed; aborting.';
-}
+my @libs = ( 'cwiimote', 'bluetooth' );
+check_lib_or_exit( lib => \@libs ); 
 
 name 'Linux-Input-Wiimote';
 all_from 'lib/Linux/Input/Wiimote.pm';
@@ -23,7 +21,7 @@ test_requires 'Test::More';
 
 makemaker_args
     INC    => '-Isrc/libwiimote-0.4/src',
-    LIBS   => $libvars[ 2 ],
+    LIBS   => join( ' ', map { "-l${_}" } @libs ),
     DEFINE => '-D_ENABLE_TILT -D_ENABLE_FORCE';
 
 auto_install;
