@@ -1,5 +1,8 @@
 Revision history for Perl extension Linux::Input::Wiimote.
 
+0.04002  Fri Dec 21 2007
+    - forgot to bundle some devel modules
+
 0.04001  Fri Dec 21 2007
     - attempt to fix makefile issues
 
