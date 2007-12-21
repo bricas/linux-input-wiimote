@@ -5,7 +5,7 @@ use warnings;
 
 use base qw(DynaLoader);
 
-our $VERSION = '0.04000';
+our $VERSION = '0.04001';
 
 bootstrap Linux::Input::Wiimote;
 

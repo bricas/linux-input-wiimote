@@ -1,11 +1,11 @@
 use inc::Module::Install 0.68;
 use ExtUtils::Liblist;
-use lib 'inc';
 use Devel::AssertOS 'Linux';
 
 if ( -e 'MANIFEST.SKIP' ) {
     system( 'pod2text lib/Linux/Input/Wiimote.pm > README' );
 
+    include 'Devel::CheckOS';
     include 'Devel::AssertOS';
     include 'Devel::AssertOS::Linux';
 }
