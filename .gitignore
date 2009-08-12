@@ -11,3 +11,5 @@ MANIFEST*
 *.o
 *.bs
 *.c
+ppport.h
+README
