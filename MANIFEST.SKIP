@@ -33,5 +33,4 @@
 # Avoid stuff from XS compilation
 \.o$
 \.bs$
-# no .c files in the main dir, they're all under src/
-^[^/]+\.c$
+\.c$
