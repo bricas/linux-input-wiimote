@@ -12,7 +12,7 @@ if ( -e 'MANIFEST.SKIP' ) {
     include 'Devel::AssertOS::Linux';
 }
 
-my @libs = ( 'cwiimote', 'bluetooth' );
+my @libs = ( 'cwiid', 'bluetooth' );
 my $libpath = [ grep { -d } split( / /, $Config{'libpth'} ) ];
 check_lib_or_exit( lib => \@libs, libpath => $libpath ); 
 
@@ -21,10 +21,8 @@ all_from 'lib/Linux/Input/Wiimote.pm';
 
 test_requires 'Test::More';
 
-makemaker_args
-    INC    => '-Isrc/libwiimote-0.4/src',
-    LIBS   => join( ' ', map { "-l${_}" } @libs ),
-    DEFINE => '-D_ENABLE_TILT -D_ENABLE_FORCE';
+makemaker_args LIBS => join( ' ', map { "-l${_}" } @libs );
+ppport;
 
 auto_install;
 WriteAll;
