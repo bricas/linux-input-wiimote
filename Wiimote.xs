@@ -8,26 +8,28 @@
 #include "ppport.h"
 
 typedef cwiid_wiimote_t *Linux__Input__Wiimote;
+typedef struct cwiid_state *Linux__Input__Wiimote__State;
 
-MODULE = Linux::Input::Wiimote         PACKAGE = Linux::Input::Wiimote
+MODULE = Linux::Input::Wiimote  PACKAGE = Linux::Input::Wiimote
 
 PROTOTYPES: DISABLE
 
 Linux::Input::Wiimote
-_new( packname="Linux::Input::Wiimote", addr )
+new( packname="Linux::Input::Wiimote", ... )
     char *packname
-    char *addr
-CODE:
+PREINIT:
+    char *addr;
     bdaddr_t bdaddr;
- 
-    if( strlen( addr ) > 0 ) {
+    cwiid_wiimote_t *wiimote = NULL;
+CODE:
+    if( items > 1 ) {
+        addr = (char *)SvPV_nolen( ST( 1 ) );
         str2ba( addr, &bdaddr );
     }
     else {
         bdaddr = *BDADDR_ANY;
     }
 
-    cwiid_wiimote_t *wiimote = NULL;
     wiimote = cwiid_open( &bdaddr, 0 );
     RETVAL = wiimote;
 OUTPUT:
@@ -46,7 +48,7 @@ set_led_state( self, state )
     Linux::Input::Wiimote self
     unsigned char state
 CODE:
-    cwiid_set_led( self, state );
+    RETVAL = cwiid_set_led( self, state );
 OUTPUT:
     RETVAL
 
@@ -55,7 +57,7 @@ set_rumble( self, rumble )
     Linux::Input::Wiimote self
     unsigned char rumble
 CODE:
-    cwiid_set_rumble( self, rumble );
+    RETVAL = cwiid_set_rumble( self, rumble );
 OUTPUT:
     RETVAL    
 
@@ -66,3 +68,17 @@ CODE:
     RETVAL = cwiid_close( self );
 OUTPUT:
     RETVAL
+
+Linux::Input::Wiimote::State
+get_state( self )
+    Linux::Input::Wiimote self
+PREINIT:
+    struct cwiid_state state;
+CODE:
+    cwiid_get_state( self, &state );
+    RETVAL = &state;
+OUTPUT:
+    RETVAL
+
+MODULE = Linux::Input::Wiimote  PACKAGE = Linux::Input::Wiimote::State
+

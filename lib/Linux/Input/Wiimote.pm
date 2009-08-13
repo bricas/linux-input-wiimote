@@ -9,10 +9,6 @@ our $VERSION = '0.05001';
 
 bootstrap Linux::Input::Wiimote $VERSION;
 
-sub new {
-    shift->_new( shift || '' );
-}
-
 1;
 
 __END__

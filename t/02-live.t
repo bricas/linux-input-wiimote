@@ -8,9 +8,7 @@ plan tests => 3;
 
 use_ok( 'Linux::Input::Wiimote' );
 
-use Data::Dumper;
-
-my $wiimote = Linux::Input::Wiimote->new( $ENV{ WIIMOTE_ADDR } );
+my $wiimote = Linux::Input::Wiimote->new( $ENV{ WIIMOTE_ADDR } || () );
 BAIL_OUT 'Unable to connect Wiimote' unless $wiimote;
 
 isa_ok( $wiimote, 'Linux::Input::Wiimote' );

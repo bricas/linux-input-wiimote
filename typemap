@@ -1,2 +1,3 @@
 TYPEMAP
 Linux::Input::Wiimote	T_PTROBJ
+Linux::Input::Wiimote::State	T_PTROBJ
