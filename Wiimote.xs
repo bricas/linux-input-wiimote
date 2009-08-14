@@ -73,11 +73,13 @@ Linux::Input::Wiimote::State
 get_state( self )
     Linux::Input::Wiimote self
 PREINIT:
-    struct cwiid_state state;
+    struct cwiid_state *state;
+INIT:
+    Newx( state, 1, struct cwiid_state );
 CODE:
-    cwiid_get_state( self, &state );
-    warn( "Rumble (XS): %d", state.rumble );
-    RETVAL = &state;
+    cwiid_get_state( self, state );
+    warn( "Rumble (XS): %d", state->rumble );
+    RETVAL = state;
 OUTPUT:
     RETVAL
 
@@ -90,3 +92,9 @@ CODE:
     RETVAL = self->rumble;
 OUTPUT:
     RETVAL
+
+void
+DESTROY( self )
+    Linux::Input::Wiimote::State self
+CODE:
+    Safefree( self );
