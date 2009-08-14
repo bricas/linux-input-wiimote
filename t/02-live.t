@@ -4,7 +4,7 @@ use warnings;
 use Test::More;
 
 plan skip_all => '$ENV{WIIMOTE_ADDR} not set' if !exists $ENV{ WIIMOTE_ADDR };
-plan tests => 3;
+plan tests => 4;
 
 use_ok( 'Linux::Input::Wiimote' );
 
