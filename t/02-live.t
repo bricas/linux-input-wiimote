@@ -8,6 +8,8 @@ plan tests => 3;
 
 use_ok( 'Linux::Input::Wiimote' );
 
+note( 'Press buttons 1 + 2 on your Wiimote' );
+
 my $wiimote = Linux::Input::Wiimote->new( $ENV{ WIIMOTE_ADDR } || () );
 BAIL_OUT 'Unable to connect Wiimote' unless $wiimote;
 
@@ -23,6 +25,9 @@ note( 'Wiimote ID: ' . $wiimote->id );
 
 #$wiimote->set_rumble( 1 );
 #$wiimote->set_rumble( 0 );
+
+my $state = $wiimote->get_state;
+is( $state->rumble, 0, 'state->rumble' );
 
 my $status = $wiimote->disconnect;
 is( $status, 0, 'disconnect' );

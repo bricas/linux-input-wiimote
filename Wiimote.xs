@@ -76,9 +76,17 @@ PREINIT:
     struct cwiid_state state;
 CODE:
     cwiid_get_state( self, &state );
+    warn( "Rumble (XS): %d", state.rumble );
     RETVAL = &state;
 OUTPUT:
     RETVAL
 
 MODULE = Linux::Input::Wiimote  PACKAGE = Linux::Input::Wiimote::State
 
+int
+rumble( self )
+    Linux::Input::Wiimote::State self
+CODE:
+    RETVAL = self->rumble;
+OUTPUT:
+    RETVAL
