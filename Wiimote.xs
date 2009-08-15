@@ -98,6 +98,22 @@ CODE:
 OUTPUT:
     RETVAL
 
+int
+report_mode( self )
+    Linux::Input::Wiimote::State self
+CODE:
+    RETVAL = self->rpt_mode;
+OUTPUT:
+    RETVAL
+
+int
+led( self )
+    Linux::Input::Wiimote::State self
+CODE:
+    RETVAL = self->led;
+OUTPUT:
+    RETVAL
+
 void
 DESTROY( self )
     Linux::Input::Wiimote::State self
