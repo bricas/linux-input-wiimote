@@ -4,7 +4,7 @@ use warnings;
 use Test::More;
 
 plan skip_all => '$ENV{WIIMOTE_ADDR} not set' if !exists $ENV{ WIIMOTE_ADDR };
-plan tests => 5;
+plan tests => 6;
 
 use_ok( 'Linux::Input::Wiimote' );
 
@@ -20,7 +20,7 @@ note( 'Wiimote ID: ' . $wiimote->id );
 # test rumble
 {
     my $state = $wiimote->get_state;
-    is( $state->rumble, 0, 'state->rumble offs' );
+    is( $state->rumble, 0, 'state->rumble off' );
 
     $wiimote->set_rumble(1);
     $state = $wiimote->get_state;
@@ -34,7 +34,7 @@ note( 'Wiimote ID: ' . $wiimote->id );
 # test battery
 {
     my $state = $wiimote->get_state;
-    ok( $state->battery > 0, ''battery' );
+    ok( $state->battery > 0, 'battery: ' . $state->battery );
 }
 
 #$wiimote->set_led_state( 1 );
