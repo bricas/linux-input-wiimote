@@ -78,7 +78,6 @@ INIT:
     Newx( state, 1, struct cwiid_state );
 CODE:
     cwiid_get_state( self, state );
-    warn( "Rumble (XS): %d", state->rumble );
     RETVAL = state;
 OUTPUT:
     RETVAL

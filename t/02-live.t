@@ -17,6 +17,9 @@ isa_ok( $wiimote, 'Linux::Input::Wiimote' );
 
 note( 'Wiimote ID: ' . $wiimote->id );
 
+my $state = $wiimote->get_state;
+is( $state->rumble, 0, 'state->rumble' );
+
 #$wiimote->set_led_state( 1 );
 #$wiimote->set_led_state( 2 );
 #$wiimote->set_led_state( 4 );
@@ -25,9 +28,6 @@ note( 'Wiimote ID: ' . $wiimote->id );
 
 #$wiimote->set_rumble( 1 );
 #$wiimote->set_rumble( 0 );
-
-my $state = $wiimote->get_state;
-is( $state->rumble, 0, 'state->rumble' );
 
 my $status = $wiimote->disconnect;
 is( $status, 0, 'disconnect' );
