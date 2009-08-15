@@ -35,6 +35,12 @@ CODE:
 OUTPUT:
     RETVAL
 
+void
+DESTROY( self )
+    Linux::Input::Wiimote self
+CODE:
+    cwiid_close( self );
+
 int
 id( self )
     Linux::Input::Wiimote self
@@ -61,14 +67,6 @@ CODE:
 OUTPUT:
     RETVAL    
 
-int
-disconnect( self )
-    Linux::Input::Wiimote self
-CODE:
-    RETVAL = cwiid_close( self );
-OUTPUT:
-    RETVAL
-
 Linux::Input::Wiimote::State
 get_state( self )
     Linux::Input::Wiimote self
@@ -89,6 +87,14 @@ rumble( self )
     Linux::Input::Wiimote::State self
 CODE:
     RETVAL = self->rumble;
+OUTPUT:
+    RETVAL
+
+int
+battery( self )
+    Linux::Input::Wiimote::State self
+CODE:
+    RETVAL = self->battery;
 OUTPUT:
     RETVAL
 
