@@ -17,6 +17,9 @@ isa_ok( $wiimote, 'Linux::Input::Wiimote' );
 
 note( 'Wiimote ID: ' . $wiimote->id );
 
+use Data::Dumper;
+warn Dumper $wiimote->get_state_hv;
+
 # test rumble
 {
     my $state = $wiimote->get_state;

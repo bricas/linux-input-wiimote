@@ -10,6 +10,17 @@
 typedef cwiid_wiimote_t *Linux__Input__Wiimote;
 typedef struct cwiid_state *Linux__Input__Wiimote__State;
 
+HV * _state_to_hv( struct cwiid_state *state ) {
+    HV *hv_state = newHV();
+
+    hv_store( hv_state, "battery", sizeof( "battery" ), newSVuv( state->battery ), 0 );
+    hv_store( hv_state, "led", sizeof( "led" ), newSVuv( state->led ), 0 );
+    hv_store( hv_state, "rpt_mode", sizeof( "rpt_mode" ), newSVuv( state->rpt_mode ), 0 );
+    hv_store( hv_state, "rumble", sizeof( "rumble" ), newSVuv( state->rumble ), 0 );
+
+    return hv_state;
+}
+
 MODULE = Linux::Input::Wiimote  PACKAGE = Linux::Input::Wiimote
 
 PROTOTYPES: DISABLE
@@ -67,9 +78,22 @@ CODE:
 OUTPUT:
     RETVAL    
 
+HV *
+get_state_hv( self )
+    Linux::Input::Wiimote self
+PREINIT:
+    struct cwiid_state *state;
+INIT:
+    Newx( state, 1, struct cwiid_state );
+CODE:
+    cwiid_get_state( self, state );
+    RETVAL = _state_to_hv( state );
+OUTPUT:
+    RETVAL
+
 Linux::Input::Wiimote::State
 get_state( self )
-    Linux::Input::Wiimote self
+    Linux::Input::Wiimote self;
 PREINIT:
     struct cwiid_state *state;
 INIT:
