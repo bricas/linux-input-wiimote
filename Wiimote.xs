@@ -42,6 +42,11 @@ CODE:
     }
 
     wiimote = cwiid_open( &bdaddr, 0 );
+
+    /* Send a command so state will work properly */
+    if( wiimote )
+        cwiid_set_rumble( wiimote, 0 );
+
     RETVAL = wiimote;
 OUTPUT:
     RETVAL
