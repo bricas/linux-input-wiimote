@@ -13,10 +13,10 @@ typedef struct cwiid_state *Linux__Input__Wiimote__State;
 HV * _state_to_hv( struct cwiid_state *state ) {
     HV *hv_state = newHV();
 
-    hv_store( hv_state, "battery", sizeof( "battery" ), newSVuv( state->battery ), 0 );
-    hv_store( hv_state, "led", sizeof( "led" ), newSVuv( state->led ), 0 );
-    hv_store( hv_state, "rpt_mode", sizeof( "rpt_mode" ), newSVuv( state->rpt_mode ), 0 );
-    hv_store( hv_state, "rumble", sizeof( "rumble" ), newSVuv( state->rumble ), 0 );
+    if (!hv_store( hv_state, "battery",     7,  newSVuv( state.battery  ), 0 )) croak ("failed to store battery");
+    if (!hv_store( hv_state, "led",         3,  newSVuv( state.led      ), 0 )) croak ("failed to store led");
+    if (!hv_store( hv_state, "report_mode", 11, newSVuv( state.rpt_mode ), 0 )) croak ("failed to store report_mode");
+    if (!hv_store( hv_state, "rumble",      6,  newSVuv( state.rumble   ), 0 )) croak ("failed to store rumble");
 
     return hv_state;
 }
