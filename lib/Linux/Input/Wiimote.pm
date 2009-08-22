@@ -2,6 +2,7 @@ package Linux::Input::Wiimote;
 
 use strict;
 use warnings;
+use Linux::Input::Wiimote::State;
 
 use base qw( DynaLoader );
 

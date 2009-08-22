@@ -1,3 +1,8 @@
 TYPEMAP
 Linux::Input::Wiimote	T_PTROBJ
-Linux::Input::Wiimote::State	T_PTROBJ
+Linux::Input::Wiimote::State	T_STATE
+
+OUTPUT
+
+T_STATE
+    $arg = _state_struct_to_obj ($var);
