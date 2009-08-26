@@ -3,7 +3,7 @@ package Linux::Input::Wiimote::State;
 use Moose;
 use namespace::autoclean;
 
-has [ qw(rumble battery report_mode led buttons acc ) ] => ( is => 'ro', init_arg => undef );
+has [ qw(rumble battery report_mode led buttons acc ext_type ) ] => ( is => 'ro', init_arg => undef );
 
 __PACKAGE__->meta->make_immutable;
 
