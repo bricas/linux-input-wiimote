@@ -15,12 +15,18 @@ _state_struct_to_obj(struct cwiid_state state)
 {
     SV *rv;
     HV *stash, *hv_state = newHV();
+    AV *acc = newAV();
 
     if (!hv_store( hv_state, "battery",     7,  newSVuv( state.battery  ), 0 )) croak ("failed to store battery");
     if (!hv_store( hv_state, "led",         3,  newSVuv( state.led      ), 0 )) croak ("failed to store led");
     if (!hv_store( hv_state, "report_mode", 11, newSVuv( state.rpt_mode ), 0 )) croak ("failed to store report_mode");
     if (!hv_store( hv_state, "rumble",      6,  newSVuv( state.rumble   ), 0 )) croak ("failed to store rumble");
     if (!hv_store( hv_state, "buttons",     7,  newSVuv( state.buttons  ), 0 )) croak ("failed to store buttons");
+
+    av_push( acc, newSVuv( state.acc[ 0 ] ) );
+    av_push( acc, newSVuv( state.acc[ 1 ] ) );
+    av_push( acc, newSVuv( state.acc[ 2 ] ) );
+    if (!hv_store( hv_state, "acc", 3,  newRV_noinc((SV *)acc ), 0 )) croak ("failed to store acc");
 
     rv = newRV_noinc((SV *)hv_state);
     stash = gv_stashpvs("Linux::Input::Wiimote::State", 0);
@@ -88,6 +94,15 @@ set_rumble( self, rumble )
     unsigned char rumble
 CODE:
     RETVAL = cwiid_set_rumble( self, rumble );
+OUTPUT:
+    RETVAL
+
+int
+set_rpt_mode( self, rpt_mode )
+    Linux::Input::Wiimote self
+    unsigned char rpt_mode
+CODE:
+    RETVAL = cwiid_set_rpt_mode( self, rpt_mode );
 OUTPUT:
     RETVAL
 
