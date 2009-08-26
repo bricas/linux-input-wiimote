@@ -4,7 +4,7 @@ use warnings;
 use Test::More;
 
 plan skip_all => '$ENV{WIIMOTE_ADDR} not set' if !exists $ENV{ WIIMOTE_ADDR };
-plan tests => 10;
+plan tests => 22;
 
 use_ok( 'Linux::Input::Wiimote' );
 
@@ -50,17 +50,32 @@ diag explain $wiimote->get_state;
     my $state = $wiimote->get_state;
     is( $state->led, 0, 'leds off'  );
 
-    $wiimote->set_led_state( 2 );
+    for( 0..3 ) {
+        my $led_bit = 2 ** $_;
+        my $led_num = $_ + 1;
+
+        $wiimote->set_led_state( $led_bit );
+        $state = $wiimote->get_state;
+        is( $state->led, $led_bit, "led ${led_num} on" );
+
+        my $method = "led_${led_num}";
+        is( $state->$method, 1, "onvenience method: $method" );
+    }
+
+    $wiimote->set_led_state( 15 );
     $state = $wiimote->get_state;
-    is( $state->led, 2, 'led 2 on' );
+    is( $state->led_1, 1, 'all on: led 1' );    
+    is( $state->led_2, 1, 'all on: led 2' );    
+    is( $state->led_3, 1, 'all on: led 3' );    
+    is( $state->led_4, 1, 'all on: led 4' );    
 
     $wiimote->set_led_state( 0 );
     $state = $wiimote->get_state;
     is( $state->led, 0, 'leds off' );
 }
 
-#$wiimote->set_led_state( 1 );
-#$wiimote->set_led_state( 2 );
-#$wiimote->set_led_state( 4 );
-#$wiimote->set_led_state( 8 );
-#$wiimote->set_led_state( 0 );
+# test buttons
+{
+    my $state = $wiimote->get_state;
+    is( $state->buttons, 0, 'no buttons pressed' );
+}

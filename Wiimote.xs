@@ -20,6 +20,7 @@ _state_struct_to_obj(struct cwiid_state state)
     if (!hv_store( hv_state, "led",         3,  newSVuv( state.led      ), 0 )) croak ("failed to store led");
     if (!hv_store( hv_state, "report_mode", 11, newSVuv( state.rpt_mode ), 0 )) croak ("failed to store report_mode");
     if (!hv_store( hv_state, "rumble",      6,  newSVuv( state.rumble   ), 0 )) croak ("failed to store rumble");
+    if (!hv_store( hv_state, "buttons",     7,  newSVuv( state.buttons  ), 0 )) croak ("failed to store buttons");
 
     rv = newRV_noinc((SV *)hv_state);
     stash = gv_stashpvs("Linux::Input::Wiimote::State", 0);

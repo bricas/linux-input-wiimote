@@ -19,6 +19,8 @@ check_lib_or_exit( lib => \@libs, libpath => $libpath );
 name 'Linux-Input-Wiimote';
 all_from 'lib/Linux/Input/Wiimote.pm';
 
+requires 'Moose';
+
 test_requires 'Test::More';
 
 makemaker_args LIBS => join( ' ', map { "-l${_}" } @libs );
