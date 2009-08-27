@@ -22,6 +22,7 @@ _state_struct_to_obj(struct cwiid_state state)
     if (!hv_store( hv_state, "report_mode", 11, newSVuv( state.rpt_mode ), 0 )) croak ("failed to store report_mode");
     if (!hv_store( hv_state, "rumble",      6,  newSVuv( state.rumble   ), 0 )) croak ("failed to store rumble");
     if (!hv_store( hv_state, "buttons",     7,  newSVuv( state.buttons  ), 0 )) croak ("failed to store buttons");
+    if (!hv_store( hv_state, "error",       5,  newSVuv( state.error    ), 0 )) croak ("failed to store error");
     if (!hv_store( hv_state, "ext_type",    8,  newSVuv( state.ext_type ), 0 )) croak ("failed to store ext_type");
 
     av_push( acc, newSVuv( state.acc[ 0 ] ) );

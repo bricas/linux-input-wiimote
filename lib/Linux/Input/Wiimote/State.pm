@@ -33,4 +33,15 @@ for my $bt ( keys %btn ) {
 
 __PACKAGE__->meta->make_immutable;
 
+sub button_pressed {
+    my( $self, @btns ) = @_;
+    my $buttons = $self->buttons;
+
+    for( @btns ) {
+        return 0 if !$buttons & $btn{ $_ };
+    }
+
+    return 1;
+}
+
 1;
