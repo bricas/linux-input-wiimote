@@ -33,6 +33,10 @@ for my $bt ( keys %btn ) {
 
 __PACKAGE__->meta->make_immutable;
 
+sub battery_level {
+    return 100 * shift->battery / 0xd0;
+}
+
 sub button_pressed {
     my( $self, @btns ) = @_;
     my $buttons = $self->buttons;
