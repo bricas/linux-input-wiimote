@@ -10,7 +10,7 @@
 typedef cwiid_wiimote_t *Linux__Input__Wiimote;
 typedef struct cwiid_state Linux__Input__Wiimote__State;
 
-SV *
+STATIC SV *
 _nunchuk_state_to_obj( struct nunchuk_state *nunchuk )
 {
     HV *nun_hv = newHV();
@@ -32,6 +32,66 @@ _nunchuk_state_to_obj( struct nunchuk_state *nunchuk )
     rv = newRV_noinc((SV *)nun_hv);
     return rv;
 }
+
+STATIC SV *
+_classic_state_to_obj( struct classic_state *classic )
+{
+    HV *classic_hv = newHV();
+    SV *rv;
+    AV *l_stick = newAV();
+    AV *r_stick = newAV();
+
+    av_push( l_stick, newSVuv( classic->l_stick[ CWIID_X ] ) );
+    av_push( l_stick, newSVuv( classic->l_stick[ CWIID_Y ] ) );
+    hv_store( classic_hv, "l_stick", 7,  newRV_noinc((SV *)l_stick ), 0 );
+
+    av_push( r_stick, newSVuv( classic->r_stick[ CWIID_X ] ) );
+    av_push( r_stick, newSVuv( classic->r_stick[ CWIID_Y ] ) );
+    hv_store( classic_hv, "r_stick", 7,  newRV_noinc((SV *)r_stick ), 0 );
+
+    hv_store( classic_hv, "buttons", 7, newSVuv( classic->buttons ), 0 ); 
+    hv_store( classic_hv, "l", 1, newSVuv( classic->l ), 0 ); 
+    hv_store( classic_hv, "r", 1, newSVuv( classic->r ), 0 ); 
+
+    rv = newRV_noinc((SV *)classic_hv);
+    return rv;
+}
+
+
+#ifdef CWIID_EXT_BALANCE
+STATIC SV *
+_balance_state_to_obj( struct balance_state *balance )
+{
+    HV *balance_hv = newHV();
+    SV *rv;
+
+    hv_store( balance_hv, "right_top", 9, newSVuv( balance->right_top ), 0 ); 
+    hv_store( balance_hv, "right_bottom", 12, newSVuv( balance->right_bottom ), 0 ); 
+    hv_store( balance_hv, "left_top", 8, newSVuv( balance->left_top ), 0 ); 
+    hv_store( balance_hv, "left_bottom", 11, newSVuv( balance->left_bottom ), 0 ); 
+
+    rv = newRV_noinc((SV *)balance_hv);
+    return rv;
+}
+#endif
+
+#ifdef CWIID_EXT_MOTIONPLUS
+STATIC SV *
+_motionplus_state_to_obj( struct motionplus_state *motionplus )
+{
+    HV *mp_hv = newHV();
+    AV *angle_rate = newAV();
+    SV *rv;
+
+    av_push( angle_rate, newSVuv( motionplus->angle_rate[ CWIID_X ] ) );
+    av_push( angle_rate, newSVuv( motionplus->angle_rate[ CWIID_Y ] ) );
+    av_push( angle_rate, newSVuv( motionplus->angle_rate[ CWIID_Z ] ) );
+    hv_store( mp_hv, "angle_rate", 10,  newRV_noinc((SV *)angle_rate ), 0 );
+
+    rv = newRV_noinc((SV *)mp_hv);
+    return rv;
+}
+#endif
 
 STATIC SV *
 _state_struct_to_obj(struct cwiid_state state)
@@ -65,19 +125,22 @@ _state_struct_to_obj(struct cwiid_state state)
             hv_store( exts, "nunchuk", 7, _nunchuk_state_to_obj( &state.ext.nunchuk ), 0 );
             break;
         case CWIID_EXT_CLASSIC:
+            hv_store( exts, "classic", 7, _classic_state_to_obj( &state.ext.classic ), 0 );
             break;
 #ifdef CWIID_EXT_BALANCE
         case CWIID_EXT_BALANCE:
+            hv_store( exts, "balance", 7, _balance_state_to_obj( &state.ext.balance ), 0 );
             break;
 #endif
 #ifdef CWIID_EXT_MOTIONPLUS
         case CWIID_EXT_MOTIONPLUS:
+            hv_store( exts, "motionplus", 10, _motionplus_state_to_obj( &state.ext.motionplus ), 0 );
             break;
 #endif
     }
     if (!hv_store( hv_state, "exts", 4, newRV_noinc((SV *)exts), 0 )) croak ("failed to store exts");
 
-    for ( i = 0; i < 4; i++ ) {
+    for ( i = 0; i < CWIID_IR_SRC_COUNT; i++ ) {
         if ( state.ir_src[ i ].valid ) {
             HV *ir = newHV();
             hv_store( ir, "x", 1, newSVuv( state.ir_src[ i ].pos[ CWIID_X ] ), 0 ); 
