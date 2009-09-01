@@ -83,9 +83,9 @@ _motionplus_state_to_obj( struct motionplus_state *motionplus )
     AV *angle_rate = newAV();
     SV *rv;
 
-    av_push( angle_rate, newSVuv( motionplus->angle_rate[ CWIID_X ] ) );
-    av_push( angle_rate, newSVuv( motionplus->angle_rate[ CWIID_Y ] ) );
-    av_push( angle_rate, newSVuv( motionplus->angle_rate[ CWIID_Z ] ) );
+    av_push( angle_rate, newSVuv( motionplus->angle_rate[ 0 ] ) );
+    av_push( angle_rate, newSVuv( motionplus->angle_rate[ 1 ] ) );
+    av_push( angle_rate, newSVuv( motionplus->angle_rate[ 2 ] ) );
     hv_store( mp_hv, "angle_rate", 10,  newRV_noinc((SV *)angle_rate ), 0 );
 
     rv = newRV_noinc((SV *)mp_hv);
