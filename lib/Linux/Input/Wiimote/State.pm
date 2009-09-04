@@ -3,7 +3,7 @@ package Linux::Input::Wiimote::State;
 use Moose;
 use namespace::autoclean;
 
-has [ qw(rumble battery report_mode led buttons acc ext_type ) ] => ( is => 'ro', init_arg => undef );
+has [ qw(rumble battery report_mode led buttons acc ext_type exts ) ] => ( is => 'ro', init_arg => undef );
 
 for my $l ( 0..3 ) {
     __PACKAGE__->meta->add_method( 'led_' . ( $l + 1 ) => sub { shift->led & ( 2 ** $l ) ? 1 : 0 } );

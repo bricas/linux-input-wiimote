@@ -13,7 +13,7 @@ typedef struct cwiid_state Linux__Input__Wiimote__State;
 STATIC SV *
 _nunchuk_state_to_obj( struct nunchuk_state *nunchuk )
 {
-    HV *nun_hv = newHV();
+    HV *stash, *nun_hv = newHV();
     SV *rv;
     AV *acc = newAV();
     AV *stick = newAV();
@@ -30,13 +30,16 @@ _nunchuk_state_to_obj( struct nunchuk_state *nunchuk )
     hv_store( nun_hv, "buttons", 7, newSVuv( nunchuk->buttons ), 0 ); 
 
     rv = newRV_noinc((SV *)nun_hv);
+    stash = gv_stashpvs("Linux::Input::Wiimote::State::Exts::Nunchuk", 0);
+    sv_bless(rv, stash);
+
     return rv;
 }
 
 STATIC SV *
 _classic_state_to_obj( struct classic_state *classic )
 {
-    HV *classic_hv = newHV();
+    HV *stash, *classic_hv = newHV();
     SV *rv;
     AV *l_stick = newAV();
     AV *r_stick = newAV();
@@ -54,6 +57,9 @@ _classic_state_to_obj( struct classic_state *classic )
     hv_store( classic_hv, "r", 1, newSVuv( classic->r ), 0 ); 
 
     rv = newRV_noinc((SV *)classic_hv);
+    stash = gv_stashpvs("Linux::Input::Wiimote::State::Exts::Classic", 0);
+    sv_bless(rv, stash);
+
     return rv;
 }
 
@@ -62,7 +68,7 @@ _classic_state_to_obj( struct classic_state *classic )
 STATIC SV *
 _balance_state_to_obj( struct balance_state *balance )
 {
-    HV *balance_hv = newHV();
+    HV *stash, *balance_hv = newHV();
     SV *rv;
 
     hv_store( balance_hv, "right_top", 9, newSVuv( balance->right_top ), 0 ); 
@@ -71,6 +77,9 @@ _balance_state_to_obj( struct balance_state *balance )
     hv_store( balance_hv, "left_bottom", 11, newSVuv( balance->left_bottom ), 0 ); 
 
     rv = newRV_noinc((SV *)balance_hv);
+    stash = gv_stashpvs("Linux::Input::Wiimote::State::Exts::Balance", 0);
+    sv_bless(rv, stash);
+
     return rv;
 }
 #endif
@@ -79,7 +88,7 @@ _balance_state_to_obj( struct balance_state *balance )
 STATIC SV *
 _motionplus_state_to_obj( struct motionplus_state *motionplus )
 {
-    HV *mp_hv = newHV();
+    HV *stash, *mp_hv = newHV();
     AV *angle_rate = newAV();
     SV *rv;
 
@@ -89,6 +98,9 @@ _motionplus_state_to_obj( struct motionplus_state *motionplus )
     hv_store( mp_hv, "angle_rate", 10,  newRV_noinc((SV *)angle_rate ), 0 );
 
     rv = newRV_noinc((SV *)mp_hv);
+    stash = gv_stashpvs("Linux::Input::Wiimote::State::Exts::MotionPlus", 0);
+    sv_bless(rv, stash);
+
     return rv;
 }
 #endif
@@ -100,7 +112,8 @@ _state_struct_to_obj(struct cwiid_state state)
     HV *stash, *hv_state = newHV();
     AV *acc = newAV();
     AV *ir_src = newAV();
-    HV *exts = newHV();
+    HV *exts_stash, *exts = newHV();
+    SV *exts_rv;
     int i;
 
     if (!hv_store( hv_state, "battery",     7,  newSVuv( state.battery  ), 0 )) croak ("failed to store battery");
@@ -138,7 +151,12 @@ _state_struct_to_obj(struct cwiid_state state)
             break;
 #endif
     }
-    if (!hv_store( hv_state, "exts", 4, newRV_noinc((SV *)exts), 0 )) croak ("failed to store exts");
+
+    exts_stash = gv_stashpvs("Linux::Input::Wiimote::State::Exts", 0);
+    exts_rv = newRV_noinc((SV *)exts);
+    sv_bless(exts_rv, exts_stash);
+
+    if (!hv_store( hv_state, "exts", 4, exts_rv, 0 )) croak ("failed to store exts");
 
     for ( i = 0; i < CWIID_IR_SRC_COUNT; i++ ) {
         if ( state.ir_src[ i ].valid ) {
