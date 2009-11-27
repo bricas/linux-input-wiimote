@@ -19,7 +19,9 @@ with 'Linux::Input::Wiimote::Role::Buttons' => {
     }
 };
 
-has [ qw(rumble battery report_mode led acc ext ) ] => ( is => 'ro', init_arg => undef );
+has [ qw(rumble battery report_mode led acc ) ] => ( is => 'ro', init_arg => undef );
+
+has 'extension' => ( is => 'ro', init_arg => undef, predicate => 'has_extension' );
 
 for my $l ( 0..3 ) {
     __PACKAGE__->meta->add_method( 'led_' . ( $l + 1 ) => sub { shift->led & ( 2 ** $l ) ? 1 : 0 } );

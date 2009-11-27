@@ -131,19 +131,19 @@ _state_struct_to_obj(struct cwiid_state state)
         case CWIID_EXT_UNKNOWN:
             break;
         case CWIID_EXT_NUNCHUK:
-            hv_store( hv_state, "ext", 3, _nunchuk_state_to_obj( &state.ext.nunchuk ), 0 );
+            hv_store( hv_state, "extension", 9, _nunchuk_state_to_obj( &state.ext.nunchuk ), 0 );
             break;
         case CWIID_EXT_CLASSIC:
-            hv_store( hv_state, "ext", 3, _classic_state_to_obj( &state.ext.classic ), 0 );
+            hv_store( hv_state, "extension", 9, _classic_state_to_obj( &state.ext.classic ), 0 );
             break;
 #ifdef CWIID_EXT_BALANCE
         case CWIID_EXT_BALANCE:
-            hv_store( hv_state, "ext", 3, _balance_state_to_obj( &state.ext.balance ), 0 );
+            hv_store( hv_state, "extension", 9, _balance_state_to_obj( &state.ext.balance ), 0 );
             break;
 #endif
 #ifdef CWIID_EXT_MOTIONPLUS
         case CWIID_EXT_MOTIONPLUS:
-            hv_store( hv_state, "ext", 3, _motionplus_state_to_obj( &state.ext.motionplus ), 0 );
+            hv_store( hv_state, "extension", 9, _motionplus_state_to_obj( &state.ext.motionplus ), 0 );
             break;
 #endif
     }
