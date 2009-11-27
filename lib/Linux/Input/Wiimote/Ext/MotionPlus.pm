@@ -1,4 +1,4 @@
-package Linux::Input::Wiimote::State::Exts::MotionPlus;
+package Linux::Input::Wiimote::Ext::MotionPlus;
 
 use Moose;
 use namespace::autoclean;

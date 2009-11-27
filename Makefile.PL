@@ -1,4 +1,4 @@
-use inc::Module::Install 0.68;
+use inc::Module::Install 0.91;
 use Devel::AssertOS 'Linux';
 use Devel::CheckLib;
 use Config;
@@ -16,15 +16,19 @@ my @libs = ( 'cwiid', 'bluetooth' );
 my $libpath = [ grep { -d } split( / /, $Config{'libpth'} ) ];
 check_lib_or_exit( lib => \@libs, libpath => $libpath ); 
 
+perl_version '5.008';
+
 name 'Linux-Input-Wiimote';
 all_from 'lib/Linux/Input/Wiimote.pm';
 
 requires 'Moose';
+requires 'MooseX::Role::Parameterized';
 
 test_requires 'Test::More';
 
 makemaker_args LIBS => join( ' ', map { "-l${_}" } @libs );
 ppport;
 
-auto_install;
+repository "http://github.com/bricas/linux-input-wiimote/";
+
 WriteAll;

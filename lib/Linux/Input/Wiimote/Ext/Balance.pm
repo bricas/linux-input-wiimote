@@ -1,4 +1,4 @@
-package Linux::Input::Wiimote::State::Exts::Balance;
+package Linux::Input::Wiimote::Ext::Balance;
 
 use Moose;
 use namespace::autoclean;

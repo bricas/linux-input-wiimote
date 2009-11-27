@@ -30,7 +30,7 @@ _nunchuk_state_to_obj( struct nunchuk_state *nunchuk )
     hv_store( nun_hv, "buttons", 7, newSVuv( nunchuk->buttons ), 0 ); 
 
     rv = newRV_noinc((SV *)nun_hv);
-    stash = gv_stashpvs("Linux::Input::Wiimote::State::Exts::Nunchuk", 0);
+    stash = gv_stashpvs("Linux::Input::Wiimote::Ext::Nunchuk", 0);
     sv_bless(rv, stash);
 
     return rv;
@@ -57,12 +57,11 @@ _classic_state_to_obj( struct classic_state *classic )
     hv_store( classic_hv, "r", 1, newSVuv( classic->r ), 0 ); 
 
     rv = newRV_noinc((SV *)classic_hv);
-    stash = gv_stashpvs("Linux::Input::Wiimote::State::Exts::Classic", 0);
+    stash = gv_stashpvs("Linux::Input::Wiimote::Ext::Classic", 0);
     sv_bless(rv, stash);
 
     return rv;
 }
-
 
 #ifdef CWIID_EXT_BALANCE
 STATIC SV *
@@ -77,7 +76,7 @@ _balance_state_to_obj( struct balance_state *balance )
     hv_store( balance_hv, "left_bottom", 11, newSVuv( balance->left_bottom ), 0 ); 
 
     rv = newRV_noinc((SV *)balance_hv);
-    stash = gv_stashpvs("Linux::Input::Wiimote::State::Exts::Balance", 0);
+    stash = gv_stashpvs("Linux::Input::Wiimote::Ext::Balance", 0);
     sv_bless(rv, stash);
 
     return rv;
@@ -98,7 +97,7 @@ _motionplus_state_to_obj( struct motionplus_state *motionplus )
     hv_store( mp_hv, "angle_rate", 10,  newRV_noinc((SV *)angle_rate ), 0 );
 
     rv = newRV_noinc((SV *)mp_hv);
-    stash = gv_stashpvs("Linux::Input::Wiimote::State::Exts::MotionPlus", 0);
+    stash = gv_stashpvs("Linux::Input::Wiimote::Ext::MotionPlus", 0);
     sv_bless(rv, stash);
 
     return rv;
@@ -112,8 +111,6 @@ _state_struct_to_obj(struct cwiid_state state)
     HV *stash, *hv_state = newHV();
     AV *acc = newAV();
     AV *ir_src = newAV();
-    HV *exts_stash, *exts = newHV();
-    SV *exts_rv;
     int i;
 
     if (!hv_store( hv_state, "battery",     7,  newSVuv( state.battery  ), 0 )) croak ("failed to store battery");
@@ -122,7 +119,6 @@ _state_struct_to_obj(struct cwiid_state state)
     if (!hv_store( hv_state, "rumble",      6,  newSVuv( state.rumble   ), 0 )) croak ("failed to store rumble");
     if (!hv_store( hv_state, "buttons",     7,  newSVuv( state.buttons  ), 0 )) croak ("failed to store buttons");
     if (!hv_store( hv_state, "error",       5,  newSVuv( state.error    ), 0 )) croak ("failed to store error");
-    if (!hv_store( hv_state, "ext_type",    8,  newSVuv( state.ext_type ), 0 )) croak ("failed to store ext_type");
 
     av_push( acc, newSVuv( state.acc[ CWIID_X ] ) );
     av_push( acc, newSVuv( state.acc[ CWIID_Y ] ) );
@@ -135,28 +131,22 @@ _state_struct_to_obj(struct cwiid_state state)
         case CWIID_EXT_UNKNOWN:
             break;
         case CWIID_EXT_NUNCHUK:
-            hv_store( exts, "nunchuk", 7, _nunchuk_state_to_obj( &state.ext.nunchuk ), 0 );
+            hv_store( hv_state, "ext", 3, _nunchuk_state_to_obj( &state.ext.nunchuk ), 0 );
             break;
         case CWIID_EXT_CLASSIC:
-            hv_store( exts, "classic", 7, _classic_state_to_obj( &state.ext.classic ), 0 );
+            hv_store( hv_state, "ext", 3, _classic_state_to_obj( &state.ext.classic ), 0 );
             break;
 #ifdef CWIID_EXT_BALANCE
         case CWIID_EXT_BALANCE:
-            hv_store( exts, "balance", 7, _balance_state_to_obj( &state.ext.balance ), 0 );
+            hv_store( hv_state, "ext", 3, _balance_state_to_obj( &state.ext.balance ), 0 );
             break;
 #endif
 #ifdef CWIID_EXT_MOTIONPLUS
         case CWIID_EXT_MOTIONPLUS:
-            hv_store( exts, "motionplus", 10, _motionplus_state_to_obj( &state.ext.motionplus ), 0 );
+            hv_store( hv_state, "ext", 3, _motionplus_state_to_obj( &state.ext.motionplus ), 0 );
             break;
 #endif
     }
-
-    exts_stash = gv_stashpvs("Linux::Input::Wiimote::State::Exts", 0);
-    exts_rv = newRV_noinc((SV *)exts);
-    sv_bless(exts_rv, exts_stash);
-
-    if (!hv_store( hv_state, "exts", 4, exts_rv, 0 )) croak ("failed to store exts");
 
     for ( i = 0; i < CWIID_IR_SRC_COUNT; i++ ) {
         if ( state.ir_src[ i ].valid ) {
