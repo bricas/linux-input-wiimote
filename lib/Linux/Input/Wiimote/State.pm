@@ -27,11 +27,6 @@ for my $l ( 0..3 ) {
     __PACKAGE__->meta->add_method( 'led_' . ( $l + 1 ) => sub { shift->led & ( 2 ** $l ) ? 1 : 0 } );
 }
 
-my @acc = qw( x y z );
-for my $ac ( 0..2 ) {
-    __PACKAGE__->meta->add_method( 'acc' . ( $acc[ $ac ] ) => sub { shift->acc->[ $ac ] } );
-} 
-
 __PACKAGE__->meta->make_immutable;
 
 sub battery_level {

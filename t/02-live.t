@@ -4,7 +4,7 @@ use warnings;
 use Test::More;
 
 plan skip_all => '$ENV{WIIMOTE_ADDR} not set' if !exists $ENV{ WIIMOTE_ADDR };
-plan tests => 23;
+plan tests => 22;
 
 use_ok( 'Linux::Input::Wiimote' );
 
@@ -78,11 +78,5 @@ diag explain $wiimote->get_state;
 {
     my $state = $wiimote->get_state;
     is( $state->buttons, 0, 'no buttons pressed' );
-}
-
-# test ext_type
-{
-    my $state = $wiimote->get_state;
-    ok( defined $state->ext_type, 'ext_type' );
 }
 

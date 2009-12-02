@@ -3,6 +3,10 @@ package Linux::Input::Wiimote;
 use strict;
 use warnings;
 use Linux::Input::Wiimote::State;
+use Linux::Input::Wiimote::2D;
+use Linux::Input::Wiimote::3D;
+use Linux::Input::Wiimote::Angular;
+use Linux::Input::Wiimote::IR;
 
 use base qw( DynaLoader );
 

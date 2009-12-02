@@ -14,18 +14,30 @@ STATIC SV *
 _nunchuk_state_to_obj( struct nunchuk_state *nunchuk )
 {
     HV *stash, *nun_hv = newHV();
-    SV *rv;
-    AV *acc = newAV();
-    AV *stick = newAV();
+    SV *rv, *rv_acc, *rv_stick;
+    HV *hv_acc = newHV();
+    HV *hv_stick = newHV();
 
-    av_push( acc, newSVuv( nunchuk->acc[ CWIID_X ] ) );
-    av_push( acc, newSVuv( nunchuk->acc[ CWIID_Y ] ) );
-    av_push( acc, newSVuv( nunchuk->acc[ CWIID_Z ] ) );
-    hv_store( nun_hv, "acc", 3,  newRV_noinc((SV *)acc ), 0 );
+    // acc
+    if (!hv_store( hv_acc, "x", 1, newSVuv( nunchuk->acc[ CWIID_X ] ), 0 )) croak ("failed to store acc->x");
+    if (!hv_store( hv_acc, "y", 1, newSVuv( nunchuk->acc[ CWIID_Y ] ), 0 )) croak ("failed to store acc->y");
+    if (!hv_store( hv_acc, "z", 1, newSVuv( nunchuk->acc[ CWIID_Z ] ), 0 )) croak ("failed to store acc->z");
 
-    av_push( stick, newSVuv( nunchuk->stick[ CWIID_X ] ) );
-    av_push( stick, newSVuv( nunchuk->stick[ CWIID_Y ] ) );
-    hv_store( nun_hv, "stick", 5,  newRV_noinc((SV *)stick ), 0 );
+    rv_acc = newRV_noinc((SV *)hv_acc);
+    stash = gv_stashpvs("Linux::Input::Wiimote::3D", 0);
+    sv_bless(rv_acc, stash);
+
+    hv_store( nun_hv, "acc", 3, rv_acc, 0 );
+
+    // stick
+    if (!hv_store( hv_stick, "x", 1, newSVuv( nunchuk->stick[ CWIID_X ] ), 0 )) croak ("failed to store stick->x");
+    if (!hv_store( hv_stick, "y", 1, newSVuv( nunchuk->stick[ CWIID_Y ] ), 0 )) croak ("failed to store stick->y");
+
+    rv_stick = newRV_noinc((SV *)hv_stick);
+    stash = gv_stashpvs("Linux::Input::Wiimote::2D", 0);
+    sv_bless(rv_stick, stash);
+
+    hv_store( nun_hv, "stick", 5, rv_stick, 0 );
 
     hv_store( nun_hv, "buttons", 7, newSVuv( nunchuk->buttons ), 0 ); 
 
@@ -40,17 +52,29 @@ STATIC SV *
 _classic_state_to_obj( struct classic_state *classic )
 {
     HV *stash, *classic_hv = newHV();
-    SV *rv;
-    AV *l_stick = newAV();
-    AV *r_stick = newAV();
+    SV *rv, *rv_l_stick, *rv_r_stick;
+    HV *hv_l_stick = newHV();
+    HV *hv_r_stick = newHV();
 
-    av_push( l_stick, newSVuv( classic->l_stick[ CWIID_X ] ) );
-    av_push( l_stick, newSVuv( classic->l_stick[ CWIID_Y ] ) );
-    hv_store( classic_hv, "l_stick", 7,  newRV_noinc((SV *)l_stick ), 0 );
+    // l_stick
+    if (!hv_store( hv_l_stick, "x", 1, newSVuv( classic->l_stick[ CWIID_X ] ), 0 )) croak ("failed to store l_stick->x");
+    if (!hv_store( hv_l_stick, "y", 1, newSVuv( classic->l_stick[ CWIID_Y ] ), 0 )) croak ("failed to store l_stick->y");
 
-    av_push( r_stick, newSVuv( classic->r_stick[ CWIID_X ] ) );
-    av_push( r_stick, newSVuv( classic->r_stick[ CWIID_Y ] ) );
-    hv_store( classic_hv, "r_stick", 7,  newRV_noinc((SV *)r_stick ), 0 );
+    rv_l_stick = newRV_noinc((SV *)hv_l_stick);
+    stash = gv_stashpvs("Linux::Input::Wiimote::2D", 0);
+    sv_bless(rv_l_stick, stash);
+
+    hv_store( classic_hv, "l_stick", 7, rv_l_stick, 0 );
+
+    // r_stick
+    if (!hv_store( hv_r_stick, "x", 1, newSVuv( classic->r_stick[ CWIID_X ] ), 0 )) croak ("failed to store r_stick->x");
+    if (!hv_store( hv_r_stick, "y", 1, newSVuv( classic->r_stick[ CWIID_Y ] ), 0 )) croak ("failed to store r_stick->y");
+
+    rv_r_stick = newRV_noinc((SV *)hv_r_stick);
+    stash = gv_stashpvs("Linux::Input::Wiimote::2D", 0);
+    sv_bless(rv_r_stick, stash);
+
+    hv_store( classic_hv, "r_stick", 7, rv_r_stick, 0 );
 
     hv_store( classic_hv, "buttons", 7, newSVuv( classic->buttons ), 0 ); 
     hv_store( classic_hv, "l", 1, newSVuv( classic->l ), 0 ); 
@@ -88,13 +112,18 @@ STATIC SV *
 _motionplus_state_to_obj( struct motionplus_state *motionplus )
 {
     HV *stash, *mp_hv = newHV();
-    AV *angle_rate = newAV();
-    SV *rv;
+    HV *hv_angle_rate = newAV();
+    SV *rv, *rv_angle_rate;
 
-    av_push( angle_rate, newSVuv( motionplus->angle_rate[ 0 ] ) );
-    av_push( angle_rate, newSVuv( motionplus->angle_rate[ 1 ] ) );
-    av_push( angle_rate, newSVuv( motionplus->angle_rate[ 2 ] ) );
-    hv_store( mp_hv, "angle_rate", 10,  newRV_noinc((SV *)angle_rate ), 0 );
+    if (!hv_store( hv_angle_rate, "phi",   3, newSVuv( motionplus->angle_rate[ CWIID_PHI ] ), 0 )) croak ("failed to store angle_rate->phi");
+    if (!hv_store( hv_angle_rate, "theta", 5, newSVuv( motionplus->angle_rate[ CWIID_THETA ] ), 0 )) croak ("failed to store angle_rate->theta");
+    if (!hv_store( hv_angle_rate, "psi",   3, newSVuv( motionplus->angle_rate[ CWIID_PSI ] ), 0 )) croak ("failed to store angle_rate->psi");
+
+    rv_angle_rate = newRV_noinc((SV *)hv_angle_rate);
+    stash = gv_stashpvs("Linux::Input::Wiimote::Angular", 0);
+    sv_bless(rv_angle_rate, stash);
+
+    hv_store( mp_hv, "angle_rate", 10, rv_angle_rate, 0 );
 
     rv = newRV_noinc((SV *)mp_hv);
     stash = gv_stashpvs("Linux::Input::Wiimote::Ext::MotionPlus", 0);
@@ -107,9 +136,9 @@ _motionplus_state_to_obj( struct motionplus_state *motionplus )
 STATIC SV *
 _state_struct_to_obj(struct cwiid_state state)
 {
-    SV *rv;
+    SV *rv, *rv_acc;
     HV *stash, *hv_state = newHV();
-    AV *acc = newAV();
+    HV *hv_acc = newHV();
     AV *ir_src = newAV();
     int i;
 
@@ -120,10 +149,16 @@ _state_struct_to_obj(struct cwiid_state state)
     if (!hv_store( hv_state, "buttons",     7,  newSVuv( state.buttons  ), 0 )) croak ("failed to store buttons");
     if (!hv_store( hv_state, "error",       5,  newSVuv( state.error    ), 0 )) croak ("failed to store error");
 
-    av_push( acc, newSVuv( state.acc[ CWIID_X ] ) );
-    av_push( acc, newSVuv( state.acc[ CWIID_Y ] ) );
-    av_push( acc, newSVuv( state.acc[ CWIID_Z ] ) );
-    if (!hv_store( hv_state, "acc", 3,  newRV_noinc((SV *)acc ), 0 )) croak ("failed to store acc");
+    // acc
+    if (!hv_store( hv_acc, "x", 1, newSVuv( state.acc[ CWIID_X ] ), 0 )) croak ("failed to store acc->x");
+    if (!hv_store( hv_acc, "y", 1, newSVuv( state.acc[ CWIID_Y ] ), 0 )) croak ("failed to store acc->y");
+    if (!hv_store( hv_acc, "z", 1, newSVuv( state.acc[ CWIID_Z ] ), 0 )) croak ("failed to store acc->z");
+
+    rv_acc = newRV_noinc((SV *)hv_acc);
+    stash = gv_stashpvs("Linux::Input::Wiimote::3D", 0);
+    sv_bless(rv_acc, stash);
+
+    if (!hv_store( hv_state, "acc", 3, rv_acc, 0 )) croak ("failed to store acc");
 
     switch ( state.ext_type ) {
         case CWIID_EXT_NONE:
@@ -154,11 +189,15 @@ _state_struct_to_obj(struct cwiid_state state)
             hv_store( ir, "x", 1, newSVuv( state.ir_src[ i ].pos[ CWIID_X ] ), 0 ); 
             hv_store( ir, "y", 1, newSVuv( state.ir_src[ i ].pos[ CWIID_Y ] ), 0 ); 
             hv_store( ir, "size", 4, newSVuv( state.ir_src[ i ].size ), 0 ); 
-            av_push( ir_src, newRV_noinc((SV *)ir) ); 
+
+            SV *rv_ir = newRV_noinc((SV *)ir);
+            stash = gv_stashpvs("Linux::Input::Wiimote::IR", 0);
+            sv_bless(rv_ir, stash);
+
+            av_push( ir_src, rv_ir ); 
         }
     }
     if (!hv_store( hv_state, "ir", 2, newRV_noinc((SV *)ir_src), 0 )) croak ("failed to store ir");
-
 
     rv = newRV_noinc((SV *)hv_state);
     stash = gv_stashpvs("Linux::Input::Wiimote::State", 0);
