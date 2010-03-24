@@ -55,10 +55,10 @@ Set the state of the LEDs on the wiimote. C<$flag> is a simple bitmask
 where each bit represents an LED.
 
     # turn the 3rd LED on
-    $wiimote->set_led_state( 4 );
+    $wiimote->set_led_state( 0x04 );
 
     # turn the 1st and 4th LEDs on
-    $wiimote->set_led_state( 9 );
+    $wiimote->set_led_state( 0x01 & 0x08 );
 
 =head2 set_rumble( $flag )
 
@@ -71,9 +71,15 @@ boolean value.
     # turn rumble off
     $wiimote->set_rumble( 0 );
 
+=head2 set_rpt_mode( $mode )
+
+=head2 get_state( )
+
+Returns a L<Linux::Input::Wiimote::State> object.
+
 =head2 disconnect( )
 
-Disconnect the wiimote.
+Disconnect the wiimote. This will automatically happen when the object destroyed.
 
 =head1 SEE ALSO
 
@@ -91,11 +97,15 @@ Brian Cassidy E<lt>bricas@cpan.orgE<gt>
 
 Chad Phillips E<lt>chad@chadphillips.orgE<gt>
 
+=head1 THANK YOU
+
+Florian Ragwitz for helping me along the way.
+
 =head1 COPYRIGHT AND LICENSE
 
 Copyright 2007 by Chad Phillips
 
-Copyright 2007-2009 by Brian Cassidy
+Copyright 2007-2010 by Brian Cassidy
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself. 

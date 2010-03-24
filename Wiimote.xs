@@ -297,3 +297,11 @@ CODE:
     RETVAL = state;
 OUTPUT:
     RETVAL
+
+int
+disconnect( self )
+    Linux::Input::Wiimote self;
+CODE:
+    RETVAL = cwiid_close( self );
+OUTPUT:
+    RETVAL
