@@ -4,7 +4,7 @@ use warnings;
 use Test::More;
 
 plan skip_all => '$ENV{WIIMOTE_ADDR} not set' if !exists $ENV{ WIIMOTE_ADDR };
-plan tests => 22;
+plan tests => 25;
 
 use_ok( 'Linux::Input::Wiimote' );
 
@@ -59,7 +59,7 @@ diag explain $wiimote->get_state;
         is( $state->led, $led_bit, "led ${led_num} on" );
 
         my $method = "led_${led_num}";
-        is( $state->$method, 1, "onvenience method: $method" );
+        is( $state->$method, 1, "convenience method: $method" );
     }
 
     $wiimote->set_led_state( 15 );
@@ -80,3 +80,12 @@ diag explain $wiimote->get_state;
     is( $state->buttons, 0, 'no buttons pressed' );
 }
 
+# test acc
+{
+    $wiimote->set_rpt_mode( 0x04 );
+    my $state = $wiimote->get_state;
+    my $acc   = $state->acc;
+    ok( $acc->x, 'acc->x: ' . $acc->x );
+    ok( $acc->y, 'acc->y: ' . $acc->y );
+    ok( $acc->z, 'acc->z: ' . $acc->z );
+}
