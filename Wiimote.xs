@@ -217,7 +217,6 @@ PREINIT:
     char *addr;
     bdaddr_t bdaddr;
     cwiid_wiimote_t *wiimote = NULL;
-    struct acc_cal wm_cal;
 CODE:
     if( items > 1 ) {
         addr = (char *)SvPV_nolen( ST( 1 ) );
@@ -230,10 +229,8 @@ CODE:
     wiimote = cwiid_open( &bdaddr, 0 );
 
     /* Send a command so state will work properly */
-    if( wiimote ) {
+    if( wiimote )
         cwiid_set_rumble( wiimote, 0 );
-        cwiid_get_acc_cal( wiimote, CWIID_EXT_NONE, &wm_cal );
-    }
 
     RETVAL = wiimote;
 OUTPUT:
@@ -271,18 +268,34 @@ CODE:
 OUTPUT:
     RETVAL
 
+/*
+SV *
+get_acc_cal( self, ext )
+    Linux::Input::Wiimote self
+    unsigned char ext
+PREINIT:
+    struct acc_cal wm_cal;
+CODE:
+    RETVAL = cwiid_get_acc_cal( self, ext, &wm_cal );
+OUTPUT:
+    RETVAL
+
+SV *
+get_blanace_cal( self )
+    Linux::Input::Wiimote self
+PREINIT:
+    struct balance_cal wm_cal;
+CODE:
+    RETVAL = cwiid_get_balance_cal( self, &wm_cal );
+OUTPUT:
+    RETVAL
+*/
+
 int
 set_rpt_mode( self, rpt_mode )
     Linux::Input::Wiimote self
     unsigned char rpt_mode
-PREINIT:
-    struct acc_cal wm_cal;
 CODE:
-    // if we want NUNCHUK data, we should calibrate the acc
-    if( rpt_mode & CWIID_RPT_NUNCHUK != 0 ) {
-        cwiid_get_acc_cal( self, CWIID_EXT_NUNCHUK, &wm_cal );
-    }
-
     RETVAL = cwiid_set_rpt_mode( self, rpt_mode );
 OUTPUT:
     RETVAL
